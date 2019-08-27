@@ -25,6 +25,7 @@ my $db_server = $localxml->{key}->{mysql_bind_address}->{value};
 my $db_port = $localxml->{key}->{mysql_port}->{value};
 my $db_username = $localxml->{key}->{zimbra_mysql_user}->{value};
 my $db_password = $localxml->{key}->{zimbra_mysql_password}->{value};
+my $findfile;
 $db_port||="7306";
 $db_username||="zimbra";
 $| = 1;
@@ -65,7 +66,7 @@ foreach my $account (@$accounts)
 		if (!-e $blob)
 		{
 			#my $findfile = $path . "/" . $mailbox_id_shift . "/" . $id . "/msg/" . $id_shift . "/";
-			my $findfile = $path . "/" . $mailbox_id_shift . "/" . $id . "/msg/";
+			$findfile = $path . "/" . $mailbox_id_shift . "/" . $id . "/msg/";
 			#print "$blob not found! Searching for blobs containing $item_id in $findfile...";
 			if (-e $findfile)
 			{
