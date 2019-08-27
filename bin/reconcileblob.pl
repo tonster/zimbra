@@ -67,38 +67,45 @@ foreach my $account (@$accounts)
 			#my $findfile = $path . "/" . $mailbox_id_shift . "/" . $id . "/msg/" . $id_shift . "/";
 			my $findfile = $path . "/" . $mailbox_id_shift . "/" . $id . "/msg/";
 			#print "$blob not found! Searching for blobs containing $item_id in $findfile...";
-			my @foundfiles;
-			File::Find::find ( sub {
-                        return unless -f;
-                        #return unless !/incoming/s;
-                        return unless /^$item_id/s;
-                        push @foundfiles, $File::Find::name;
-                        #$File::Find::prune = @store_dirs > 2;
-                }, $findfile );
-			if ($#foundfiles >= 0)
+			if (-e $findfile)
 			{
-				#print $#foundfiles+1 . " found!\n";
-				foreach my $file (@foundfiles)
+				my @foundfiles;
+				File::Find::find ( sub {
+	                        return unless -f;
+	                        #return unless !/incoming/s;
+	                        return unless /^$item_id/s;
+	                        push @foundfiles, $File::Find::name;
+	                        #$File::Find::prune = @store_dirs > 2;
+	                }, $findfile );
+				if ($#foundfiles >= 0)
 				{
-					my $found_filesize = (stat($file))[7];
-					if ($found_filesize == $filesize)
+					#print $#foundfiles+1 . " found!\n";
+					foreach my $file (@foundfiles)
 					{
-						print ALTBLOBFOUND "[$comment] Alternate blob $file for $blob found and is the right size!\n";
-						#print "Found file $file is the right size!\n";
-					}
-					else
-					{
-						print ALTBLOBMISMATCH "[$comment] Alternate blob $file for $blob found, but size is wrong!\n";
-						#print "File size differs. Original: $filesize Found: $found_filesize\n";
+						my $found_filesize = (stat($file))[7];
+						if ($found_filesize == $filesize)
+						{
+							print ALTBLOBFOUND "[$comment] Alternate blob $file for $blob found and is the right size!\n";
+							#print "Found file $file is the right size!\n";
+						}
+						else
+						{
+							print ALTBLOBMISMATCH "[$comment] Alternate blob $file for $blob found, but size is wrong!\n";
+							#print "File size differs. Original: $filesize Found: $found_filesize\n";
+						}
 					}
 				}
+				else
+				{
+					#print "none found.\n";
+					print NOBLOB "[$comment] $blob not found!\n";
+				}
+				#print "$item_id\t$mod_content\t$blob\n";
 			}
-			else
-			{
-				#print "none found.\n";
-				print NOBLOB "[$comment] $blob not found!\n";
-			}
-			#print "$item_id\t$mod_content\t$blob\n";
+		}
+		else
+		{
+			print NOBLOB "[$comment] User's blob directory ($findfile) doesn't exist!\n"
 		}
 	}
 	print $p->report("[%45b] %p (Account $progress_count/$numaccounts[0]) ETA: %E\r", $progress_count);
