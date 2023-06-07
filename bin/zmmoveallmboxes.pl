@@ -86,10 +86,10 @@ sub utils_convert_bytes_to_optimal_unit
 
   my($size);
   $size = $bytes . ' Bytes' if ($bytes < 1024);
-  $size = sprintf("%.2f", ($bytes/1024)) . ' KB' if ($bytes >= 1024 && $bytes < 1048576);
-  $size = sprintf("%.2f", ($bytes/1048576)) . ' MB' if ($bytes >= 1048576 && $bytes < 1073741824);
-  $size = sprintf("%.2f", ($bytes/1073741824)) . ' GB' if ($bytes >= 1073741824 && $bytes < 1099511627776);
-  $size = sprintf("%.2f", ($bytes/1099511627776)) . ' TB' if ($bytes >= 1099511627776);
+  $size = sprintf("%.2f", ($bytes/1024)) . ' KiB' if ($bytes >= 1024 && $bytes < 1048576);
+  $size = sprintf("%.2f", ($bytes/1048576)) . ' MiB' if ($bytes >= 1048576 && $bytes < 1073741824);
+  $size = sprintf("%.2f", ($bytes/1073741824)) . ' GiB' if ($bytes >= 1073741824 && $bytes < 1099511627776);
+  $size = sprintf("%.2f", ($bytes/1099511627776)) . ' TiB' if ($bytes >= 1099511627776);
 
   return $size;
 }
